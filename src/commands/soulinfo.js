@@ -1,4 +1,5 @@
 import { SlashCommandBuilder } from "@discordjs/builders";
+import {getSouls} from "../evrloot-api.js";
 
 export const soulinfoCommand = {
     data: new SlashCommandBuilder()
@@ -14,6 +15,10 @@ export const soulinfoCommand = {
 
     async execute(interaction) {
         const address = interaction.options.getString('address')
+
+        const data = await getSouls(address);
+
+
         await interaction.reply(`${address}`);
     },
 };
