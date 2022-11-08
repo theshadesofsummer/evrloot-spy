@@ -1,7 +1,7 @@
 import { SlashCommandBuilder } from "@discordjs/builders";
 import {getSouls} from "../evrloot-api.js";
 
-export const soulinfoCommand = {
+export const soulInfoCommand = {
     data: new SlashCommandBuilder()
         .setName('soul-info')
         .setDescription('Show of your legendary soul to others!')
@@ -14,11 +14,11 @@ export const soulinfoCommand = {
         ),
 
     async execute(interaction) {
+        interaction.deferReply()
         const address = interaction.options.getString('address')
 
         const data = await getSouls(address);
-
-
+        console.log(data);
         await interaction.reply(`${address}`);
     },
 };

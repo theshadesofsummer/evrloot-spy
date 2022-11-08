@@ -5,11 +5,11 @@ import { REST } from '@discordjs/rest';
 import { Routes } from 'discord-api-types/v9';
 import { Client, Collection, IntentsBitField } from 'discord.js';
 
-import { soulinfoCommand } from './commands/soulinfo.js'
+import { soulInfoCommand } from './commands/soulinfo.js'
 
 const client = new Client({ intents: [IntentsBitField.Flags.Guilds, IntentsBitField.Flags.GuildMessages] });
 const commands = [
-    soulinfoCommand
+    soulInfoCommand
 ]
 
 export async function setupDiscordBot() {
@@ -33,7 +33,7 @@ export async function setupDiscordBot() {
         }
         catch (error) {
             console.error(error);
-            await interaction.reply({ content: 'There was an error while executing this command!', ephemeral: true });
+            // await interaction.reply({ content: 'There was an error while executing this command!', ephemeral: true });
         }
     });
 
