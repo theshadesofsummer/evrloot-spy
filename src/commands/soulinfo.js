@@ -1,6 +1,8 @@
 import { SlashCommandBuilder } from "@discordjs/builders";
 import {getSouls} from "../evrloot-api.js";
 
+import {createChooseSoulEmbed} from './embeds/choose-soul-embed.js';
+
 export const soulInfoCommand = {
     data: new SlashCommandBuilder()
         .setName('soul-info')
@@ -17,9 +19,9 @@ export const soulInfoCommand = {
         interaction.deferReply()
         const address = interaction.options.getString('address')
 
-        const data = await getSouls(address);
-        console.log(data);
-        await interaction.reply(`${address}`);
+        const soulInfos = await getSouls(address);
+
+        await interaction.editReply({embeds: createChooseSoulEmbed(address, soulInfos)});
     },
 };
 
