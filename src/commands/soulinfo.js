@@ -2,7 +2,7 @@ import { SlashCommandBuilder } from "@discordjs/builders";
 import {getSouls} from "../evrloot-api.js";
 
 import {createChooseSoulEmbed} from './embeds/choose-soul-embed.js';
-
+import { createPaginationButtons } from './components/create-paginations-buttons.js';
 export const soulInfoCommand = {
     data: new SlashCommandBuilder()
         .setName('soul-info')
@@ -16,12 +16,18 @@ export const soulInfoCommand = {
         ),
 
     async execute(interaction) {
-        interaction.deferReply()
+        interaction.deferReply({
+            ephemeral: true
+        })
         const address = interaction.options.getString('address')
 
-        const soulInfos = await getSouls(address);
+        const soulInfoWithMetadata = await getSouls(address);
 
-        await interaction.editReply({embeds: createChooseSoulEmbed(address, soulInfos)});
+        await interaction.editReply({
+            ephemeral: true,
+            embeds: createChooseSoulEmbed(address, soulInfoWithMetadata),
+            components: createPaginationButtons(soulInfoWithMetadata)
+        });
     },
 };
 

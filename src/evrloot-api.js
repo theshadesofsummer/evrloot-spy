@@ -2,19 +2,19 @@ export async function getSouls(address) {
     const nfts = await fetchAsync(`https://api.evrloot.xyz/api/nfts/wallet/${address}`);
     const souls = await nfts
         .filter(nft => nft.collection === "54bbd380dc3baaa27b-EVRSOULS")
-    
-    const metadatas = [];
-    for (let soul of souls) {
-        metadatas.push(await getSoulInfo(soul.metadata))
-    }
-    return metadatas;
+
+    return await Promise.all(souls.map(async soul => ({
+        ...soul,
+        metadata: await getSoulInfo(soul.id)
+    })))
 }
 
-async function getSoulInfo(metadatalink) {
-    const link = metadatalink.substring(metadatalink.indexOf("://")+3)
-    const data = await fetchAsync(`https://evrloot.mypinata.cloud/${link}`);
-    console.log("data: ", data);
-    return data
+export async function getSoulMetadata(id) {
+    return await getSoulInfo(id)
+}
+
+async function getSoulInfo(id) {
+    return await fetchAsync(`https://api.evrloot.xyz/api/nfts/getMetadata/${id}`);
 }
 
 async function fetchAsync(url) {
@@ -27,3 +27,4 @@ async function fetchAsync(url) {
         return json
     }).catch(error => console.log(error))
 }
+

@@ -6,10 +6,14 @@ import { Routes } from 'discord-api-types/v9';
 import { Client, Collection, IntentsBitField } from 'discord.js';
 
 import { soulInfoCommand } from './commands/soulinfo.js'
+import { soulInfoButton} from "./commands/buttons/soulInfoButton.js";
 
 const client = new Client({ intents: [IntentsBitField.Flags.Guilds, IntentsBitField.Flags.GuildMessages] });
 const commands = [
     soulInfoCommand
+]
+const buttonInteractions = [
+    soulInfoButton
 ]
 
 export async function setupDiscordBot() {
@@ -22,18 +26,28 @@ export async function setupDiscordBot() {
     });
 
     client.on('interactionCreate', async interaction => {
-        if (!interaction.isCommand()) return;
+        if (interaction.isCommand()) {
+            const command = client.commands.get(interaction.commandName);
+            if (!command) return;
 
-        const command = client.commands.get(interaction.commandName);
-
-        if (!command) return;
-
-        try {
-            await command.execute(interaction);
+            try {
+                await command.execute(interaction);
+            }
+            catch (error) {
+                console.error(error);
+                // await interaction.reply({ content: 'There was an error while executing this command!', ephemeral: true });
+            }
         }
-        catch (error) {
-            console.error(error);
-            // await interaction.reply({ content: 'There was an error while executing this command!', ephemeral: true });
+
+        if (interaction.isButton()) {
+            console.log(interaction);
+
+            try {
+                await soulInfoButton.execute(interaction);
+            }
+            catch (error) {
+                console.error(error);
+            }
         }
     });
 
