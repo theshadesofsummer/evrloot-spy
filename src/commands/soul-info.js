@@ -1,8 +1,10 @@
 import { SlashCommandBuilder } from "@discordjs/builders";
 import {getSouls} from "../evrloot-api.js";
+import {newInteractionEntry} from "../interaction-map.js";
 
 import {createChooseSoulEmbed} from './embeds/choose-soul-embed.js';
 import { createPaginationButtons } from './components/create-paginations-buttons.js';
+
 export const soulInfoCommand = {
     data: new SlashCommandBuilder()
         .setName('soul-info')
@@ -23,11 +25,13 @@ export const soulInfoCommand = {
 
         const soulInfoWithMetadata = await getSouls(address);
 
-        await interaction.editReply({
+        const message = await interaction.editReply({
             ephemeral: true,
-            embeds: createChooseSoulEmbed(address, soulInfoWithMetadata),
-            components: createPaginationButtons(soulInfoWithMetadata)
+            embeds: createChooseSoulEmbed(soulInfoWithMetadata, 0),
+            components: createPaginationButtons(soulInfoWithMetadata, 0)
         });
+
+        newInteractionEntry(message.id, soulInfoWithMetadata)
     },
 };
 

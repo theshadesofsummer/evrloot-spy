@@ -9,8 +9,6 @@ export const soulInfoButton = {
 
         const metadata = await getSoulMetadata(soulId);
 
-        console.log(metadata)
-
         await interaction.editReply({embeds: createSoulEmbed(metadata)});
     },
 }

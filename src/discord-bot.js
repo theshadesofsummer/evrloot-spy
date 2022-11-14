@@ -5,8 +5,9 @@ import { REST } from '@discordjs/rest';
 import { Routes } from 'discord-api-types/v9';
 import { Client, Collection, IntentsBitField } from 'discord.js';
 
-import { soulInfoCommand } from './commands/soulinfo.js'
-import { soulInfoButton} from "./commands/buttons/soulInfoButton.js";
+import { soulInfoCommand } from './commands/soul-info.js'
+import { soulInfoButton} from "./commands/buttons/soul-info-button.js";
+import { paginationRightButton } from './commands/buttons/pagination-right-button.js'
 
 const client = new Client({ intents: [IntentsBitField.Flags.Guilds, IntentsBitField.Flags.GuildMessages] });
 const commands = [
@@ -40,10 +41,13 @@ export async function setupDiscordBot() {
         }
 
         if (interaction.isButton()) {
-            console.log(interaction);
 
             try {
-                await soulInfoButton.execute(interaction);
+                if (interaction.customId === 'right') {
+                    await paginationRightButton.execute(interaction)
+                } else {
+                    await soulInfoButton.execute(interaction);
+                }
             }
             catch (error) {
                 console.error(error);
