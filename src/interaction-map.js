@@ -1,10 +1,19 @@
 const interactionMap = new Map();
 
 export function newInteractionEntry(messageId, metadata) {
-    interactionMap.set(messageId, {info: metadata});
+    interactionMap.set(messageId, {page: 0, info: metadata});
 }
-export function getInteractionEntry(messageId) {
-    return interactionMap.get(messageId).info;
+
+export function getInteractionEntryRight(messageId) {
+    const interactionEntry = interactionMap.get(messageId)
+    interactionEntry.page++;
+    return interactionEntry;
+}
+
+export function getInteractionEntryLeft(messageId) {
+    const interactionEntry = interactionMap.get(messageId)
+    interactionEntry.page--;
+    return interactionEntry;
 }
 
 export function deleteInteractionEntry(messageId) {

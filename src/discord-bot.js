@@ -8,6 +8,7 @@ import { Client, Collection, IntentsBitField } from 'discord.js';
 import { soulInfoCommand } from './commands/soul-info.js'
 import { soulInfoButton} from "./commands/buttons/soul-info-button.js";
 import { paginationRightButton } from './commands/buttons/pagination-right-button.js'
+import { paginationLeftButton } from './commands/buttons/pagination-left-button.js'
 
 const client = new Client({ intents: [IntentsBitField.Flags.Guilds, IntentsBitField.Flags.GuildMessages] });
 const commands = [
@@ -45,6 +46,8 @@ export async function setupDiscordBot() {
             try {
                 if (interaction.customId === 'right') {
                     await paginationRightButton.execute(interaction)
+                } else if (interaction.customId === 'left') {
+                    await paginationLeftButton.execute(interaction);
                 } else {
                     await soulInfoButton.execute(interaction);
                 }
