@@ -6,13 +6,15 @@ import { Routes } from 'discord-api-types/v9';
 import { Client, Collection, IntentsBitField } from 'discord.js';
 
 import { soulInfoCommand } from './commands/soul-info.js'
+import { imageCommand } from "./commands/image.js";
 import { soulInfoButton} from "./commands/buttons/soul-info-button.js";
 import { paginationRightButton } from './commands/buttons/pagination-right-button.js'
 import { paginationLeftButton } from './commands/buttons/pagination-left-button.js'
 
 const client = new Client({ intents: [IntentsBitField.Flags.Guilds, IntentsBitField.Flags.GuildMessages] });
 const commands = [
-    soulInfoCommand
+    soulInfoCommand,
+    imageCommand
 ]
 const buttonInteractions = [
     soulInfoButton

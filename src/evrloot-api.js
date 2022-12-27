@@ -1,3 +1,5 @@
+import { Buffer } from 'buffer'
+
 export async function getSouls(address) {
     const nfts = await fetchAsync(`https://api.evrloot.xyz/api/nfts/wallet/${address}`);
     const souls = await nfts
@@ -17,6 +19,14 @@ async function getSoulInfo(id) {
     return await fetchAsync(`https://api.evrloot.xyz/api/nfts/getMetadata/${id}`);
 }
 
+export async function getBases() {
+    return await fetchAsync(`https://api.evrloot.xyz/api/bases`);
+}
+
+export async function getOneRangerDev() {
+    return await fetchAsync(`https://api.evrloot.xyz/api/nfts/13328952-54bbd380dc3baaa27b-EVRSOULS-Ranger-00000998`);
+}
+
 async function fetchAsync(url) {
     return fetch(url).then(response => {
         if (!response.ok) {
@@ -28,3 +38,22 @@ async function fetchAsync(url) {
     }).catch(error => console.log(error))
 }
 
+export async function getImageLayer(ipfsLink) {
+    const link = `https://evrloot.mypinata.cloud/ipfs/${ipfsLink}`
+    return await fetchAsyncImage(link);
+}
+
+async function fetchAsyncImage(url) {
+    return fetch(url).then(response => {
+        if (!response.ok) {
+            throw new Error(`Request failed with status ${response.status}`)
+        }
+        return response
+    })
+        .then(response => response.arrayBuffer())
+        .then(arrayBuffer => {
+            const buf = Buffer.from(arrayBuffer)
+            return buf.toString('base64');
+        })
+        .catch(error => console.log(error))
+}
