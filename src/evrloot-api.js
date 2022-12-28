@@ -34,12 +34,12 @@ async function fetchAsync(url) {
     }).catch(error => console.log(error))
 }
 
-export async function getImageLayer(ipfsLink) {
+export async function getBase64ImageLayer(ipfsLink) {
     const link = `https://evrloot.mypinata.cloud/ipfs/${ipfsLink}`
-    return await fetchAsyncImage(link);
+    return await fetchAsyncBase64Image(link);
 }
 
-async function fetchAsyncImage(url) {
+async function fetchAsyncBase64Image(url) {
     return fetch(url).then(response => {
         if (!response.ok) {
             throw new Error(`Request failed with status ${response.status}`)
@@ -49,7 +49,7 @@ async function fetchAsyncImage(url) {
         .then(response => response.arrayBuffer())
         .then(arrayBuffer => {
             const buf = Buffer.from(arrayBuffer)
-            return buf.toString('base64');
+            return 'data:image/png;base64,' + buf.toString('base64');
         })
         .catch(error => console.log(error))
 }

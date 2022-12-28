@@ -1,10 +1,9 @@
 export function createSoulEmbed(metadata) {
     return [{
         color: 0x1d7907,
-        title: metadata.name,
         author: {
-            name: 'Soul-Info',
-            icon_url: 'https://damnedpiratessociety.io/images/logo.png', // TODO: Pic of evrloot spy
+            name: metadata.name,
+            icon_url: `https://game.evrloot.com/Soulclaim/${metadata.properties['Soul Class'].value.toLowerCase()}.png`,
         },
         description: metadata.description,
         fields: [

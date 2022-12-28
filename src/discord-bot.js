@@ -6,18 +6,11 @@ import { Routes } from 'discord-api-types/v9';
 import { Client, Collection, IntentsBitField } from 'discord.js';
 
 import { soulInfoCommand } from './commands/soul-info.js'
-import { imageCommand } from "./commands/image.js";
 import { soulInfoSelectMenu} from "./commands/select-menu/soul-info-select-menu.js";
-import { paginationCommand } from "./commands/pagination.js";
 
 const client = new Client({ intents: [IntentsBitField.Flags.Guilds, IntentsBitField.Flags.GuildMessages] });
 const commands = [
     soulInfoCommand,
-    imageCommand,
-    paginationCommand
-]
-const buttonInteractions = [
-    soulInfoSelectMenu
 ]
 
 export async function setupDiscordBot() {

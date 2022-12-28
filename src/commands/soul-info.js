@@ -1,9 +1,8 @@
-import { SlashCommandBuilder } from "discord.js";
-import {getSouls} from "../evrloot-api.js";
-import {newInteractionEntry} from "../interaction-map.js";
-
-import {createChooseSoulEmbed} from './embeds/choose-soul-embed.js';
-import { createPaginationButtons } from './components/create-paginations-buttons.js';
+import {ActionRowBuilder, SelectMenuBuilder, SlashCommandBuilder} from "discord.js";
+import {createChooseSoulsEmbed} from "./embeds/choose-soul-embeds.js";
+import {ExtraRowPosition, Pagination} from "pagination.djs";
+import {findClassEmoteObject} from "./helpers/emotes.js";
+import {getSouls} from "../evrloot-api.js"
 
 export const soulInfoCommand = {
     data: new SlashCommandBuilder()
@@ -22,16 +21,27 @@ export const soulInfoCommand = {
             ephemeral: true
         })
         const address = interaction.options.getString('address')
-
         const soulInfoWithMetadata = await getSouls(address);
 
-        const message = await interaction.editReply({
-            ephemeral: true,
-            embeds: createChooseSoulEmbed(soulInfoWithMetadata, 0),
-            components: createPaginationButtons(soulInfoWithMetadata, 0)
-        });
+        const embeds = createChooseSoulsEmbed(soulInfoWithMetadata);
 
-        newInteractionEntry(message.id, soulInfoWithMetadata)
+        const pagination = new Pagination(interaction)
+            .setEmbeds(embeds)
+            .setEphemeral(true)
+            .addActionRows([createSelectMenuRow(soulInfoWithMetadata)], ExtraRowPosition.Below);
+
+        await pagination.render();
     },
 };
 
+function createSelectMenuRow(soulInfoWithMetadata) {
+    const chooseSoulButtons = soulInfoWithMetadata.map((soulInfo, index) => ({
+        label: `[${index+1}] ${soulInfo.metadata.name}`,
+        value: soulInfo.id,
+        emoji: findClassEmoteObject(soulInfo.metadata.properties['Soul Class'].value)
+    }));
+    const chooseSoulSelectMenu = new SelectMenuBuilder()
+        .setCustomId("choose-soul-menu")
+        .addOptions(chooseSoulButtons)
+    return new ActionRowBuilder().setComponents(chooseSoulSelectMenu)
+}
