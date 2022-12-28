@@ -19,7 +19,7 @@ export async function getBases() {
     return await fetchAsync(`https://api.evrloot.xyz/api/bases`);
 }
 
-export async function getSoulInfo(id) {
+export async function geNftInfo(id) {
     return await fetchAsync(`https://api.evrloot.xyz/api/nfts/${id}`);
 }
 
