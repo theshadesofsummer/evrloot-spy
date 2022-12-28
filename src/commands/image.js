@@ -1,4 +1,4 @@
-import {SlashCommandBuilder} from "@discordjs/builders";
+import {SlashCommandBuilder} from "discord.js";
 import {getBases, getImageLayer, getOneRangerDev} from "../evrloot-api.js";
 
 import mergeImages from 'merge-images';

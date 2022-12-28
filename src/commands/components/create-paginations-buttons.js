@@ -1,4 +1,4 @@
-import {ActionRowBuilder, ButtonBuilder} from "@discordjs/builders";
+import {ActionRowBuilder, ButtonBuilder} from "discord.js";
 import {ButtonStyle} from "discord-api-types/v10";
 
 const PAGE_SIZE = 10
