@@ -5,7 +5,6 @@ import {Canvas, Image} from "canvas";
 
 export const soulInfoSelectMenu = {
     async execute(interaction) {
-
         interaction.deferReply();
         const soulId = interaction.values[0];
         console.log(soulId);
@@ -43,7 +42,7 @@ export const soulInfoSelectMenu = {
             .then(b64 => {
                 const base64content = Buffer.from(b64.substring(b64.indexOf(',')+1), 'base64')
                 interaction.editReply({
-                    embeds: createSoulEmbed(metadata),
+                    embeds: createSoulEmbed(metadata, interaction.message.interaction.user),
                     files: [
                         { attachment: base64content }
                     ]

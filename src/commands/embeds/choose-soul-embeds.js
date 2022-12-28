@@ -12,7 +12,7 @@ export function createChooseSoulsEmbed(soulInfos) {
 
 function createChooseSoulEmbed(soulInfos, page) {
     return {
-        color: 0xba7cde,
+        color: 0xae1917,
         title: `Choose your soul!`,
         description: soulList(soulInfos, page),
         timestamp: new Date().toISOString(),

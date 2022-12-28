@@ -1,11 +1,10 @@
-export function createSoulEmbed(metadata) {
+export function createSoulEmbed(metadata, user) {
     return [{
-        color: 0x1d7907,
+        color: 0xae1917,
         author: {
-            name: metadata.name,
+            name: `${metadata.name} requested by ${user.username}`,
             icon_url: `https://game.evrloot.com/Soulclaim/${metadata.properties['Soul Class'].value.toLowerCase()}.png`,
         },
-        description: metadata.description,
         fields: [
             {
                 name: 'Personality',
