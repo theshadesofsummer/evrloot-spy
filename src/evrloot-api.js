@@ -7,15 +7,11 @@ export async function getSouls(address) {
 
     return await Promise.all(souls.map(async soul => ({
         ...soul,
-        metadata: await getSoulInfo(soul.id)
+        metadata: await getSoulMetadata(soul.id)
     })))
 }
 
 export async function getSoulMetadata(id) {
-    return await getSoulInfo(id)
-}
-
-async function getSoulInfo(id) {
     return await fetchAsync(`https://api.evrloot.xyz/api/nfts/getMetadata/${id}`);
 }
 
@@ -23,8 +19,8 @@ export async function getBases() {
     return await fetchAsync(`https://api.evrloot.xyz/api/bases`);
 }
 
-export async function getOneRangerDev() {
-    return await fetchAsync(`https://api.evrloot.xyz/api/nfts/13328952-54bbd380dc3baaa27b-EVRSOULS-Ranger-00000998`);
+export async function getSoulInfo(id) {
+    return await fetchAsync(`https://api.evrloot.xyz/api/nfts/${id}`);
 }
 
 async function fetchAsync(url) {

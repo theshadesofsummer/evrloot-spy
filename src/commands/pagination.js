@@ -18,7 +18,7 @@ export const paginationCommand = {
             .setEphemeral(true)
 
         const chooseSoulButtons = soulInfoWithMetadata.map((soulInfo, index) => ({
-            label: `[${index}] ${soulInfo.metadata.name}`,
+            label: `[${index+1}] ${soulInfo.metadata.name}`,
             value: soulInfo.id,
             emoji: findClassEmoteObject(soulInfo.metadata.properties['Soul Class'].value)
         }));

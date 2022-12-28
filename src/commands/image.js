@@ -1,5 +1,5 @@
 import {SlashCommandBuilder} from "discord.js";
-import {getBases, getImageLayer, getOneRangerDev} from "../evrloot-api.js";
+import {getBases, getImageLayer, getSoulInfo} from "../evrloot-api.js";
 
 import mergeImages from 'merge-images';
 import { Canvas, Image } from 'canvas';
@@ -16,7 +16,7 @@ export const imageCommand = {
 
 
         const bases = await getBases();
-        const ranger = await getOneRangerDev();
+        const ranger = await getSoulInfo();
 
         const rangerRessources = ranger.resources[0];
 
