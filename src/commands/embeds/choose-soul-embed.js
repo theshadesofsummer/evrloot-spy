@@ -1,9 +1,9 @@
 import {findClassEmote} from "../helpers/emotes.js";
 
-const PAGE_SIZE = 10;
+const PAGE_SIZE = 5;
 
 export function createChooseSoulEmbed(soulInfos, page) {
-    return [{
+    return {
         color: 0xba7cde,
         title: `Choose your soul!`,
         author: {
@@ -12,7 +12,7 @@ export function createChooseSoulEmbed(soulInfos, page) {
         },
         description: soulList(soulInfos, page),
         timestamp: new Date().toISOString(),
-    }];
+    };
 }
 
 function soulList(soulInfos, page) {

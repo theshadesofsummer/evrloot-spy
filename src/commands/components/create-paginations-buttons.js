@@ -1,7 +1,7 @@
 import {ActionRowBuilder, ButtonBuilder} from "discord.js";
 import {ButtonStyle} from "discord-api-types/v10";
 
-const PAGE_SIZE = 10
+const PAGE_SIZE = 5
 
 export function createPaginationButtons(soulInfosWithMetadata, page) {
     const buttonRow = new ActionRowBuilder()

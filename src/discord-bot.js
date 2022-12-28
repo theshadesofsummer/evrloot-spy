@@ -7,17 +7,17 @@ import { Client, Collection, IntentsBitField } from 'discord.js';
 
 import { soulInfoCommand } from './commands/soul-info.js'
 import { imageCommand } from "./commands/image.js";
-import { soulInfoButton} from "./commands/buttons/soul-info-button.js";
-import { paginationRightButton } from './commands/buttons/pagination-right-button.js'
-import { paginationLeftButton } from './commands/buttons/pagination-left-button.js'
+import { soulInfoSelectMenu} from "./commands/select-menu/soul-info-select-menu.js";
+import { paginationCommand } from "./commands/pagination.js";
 
 const client = new Client({ intents: [IntentsBitField.Flags.Guilds, IntentsBitField.Flags.GuildMessages] });
 const commands = [
     soulInfoCommand,
-    imageCommand
+    imageCommand,
+    paginationCommand
 ]
 const buttonInteractions = [
-    soulInfoButton
+    soulInfoSelectMenu
 ]
 
 export async function setupDiscordBot() {
@@ -43,20 +43,14 @@ export async function setupDiscordBot() {
             }
         }
 
-        if (interaction.isButton()) {
-
+        if (interaction.isSelectMenu()) {
             try {
-                if (interaction.customId === 'right') {
-                    await paginationRightButton.execute(interaction)
-                } else if (interaction.customId === 'left') {
-                    await paginationLeftButton.execute(interaction);
-                } else {
-                    await soulInfoButton.execute(interaction);
-                }
+                await soulInfoSelectMenu.execute(interaction)
             }
-            catch (error) {
-                console.error(error);
-            }
+           catch (error) {
+                console.log(error);
+                await interaction.reply({ content: 'There was an error while fetching the soul!', ephemeral: true });
+           }
         }
     });
 

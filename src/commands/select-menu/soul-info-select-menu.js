@@ -1,14 +1,14 @@
 import {getSoulMetadata} from "../../evrloot-api.js";
 import {createSoulEmbed} from "../embeds/soul-embed.js";
 
-export const soulInfoButton = {
+export const soulInfoSelectMenu = {
     async execute(interaction) {
-        await interaction.deferReply()
 
-        const soulId = interaction.customId;
+        const soulId = interaction.values[0];
+        console.log(soulId);
 
         const metadata = await getSoulMetadata(soulId);
 
-        await interaction.editReply({embeds: createSoulEmbed(metadata)});
+        await interaction.reply({embeds: createSoulEmbed(metadata)});
     },
 }
