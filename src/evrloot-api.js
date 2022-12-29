@@ -7,11 +7,22 @@ export async function getSouls(address) {
 
     return await Promise.all(souls.map(async soul => ({
         ...soul,
-        metadata: await getSoulMetadata(soul.id)
+        metadata: await getNftMetadata(soul.id)
     })))
 }
 
-export async function getSoulMetadata(id) {
+export async function getFishingBoards(address) {
+    const nfts = await fetchAsync(`https://api.evrloot.xyz/api/nfts/wallet/${address}`);
+    const fishingBoards = nfts
+        .filter(nft => nft.collection === "90c6619c6b94fcfd34-EVRLOOT_FISHING" && nft.id.includes("EVRLOOT_FISHING-FISH_COLLECTORS_BOARD"))
+
+    return await Promise.all(fishingBoards.map(async fishingBoard => ({
+        ...fishingBoard,
+        metadata: await getNftMetadata(fishingBoard.id)
+    })))
+}
+
+export async function getNftMetadata(id) {
     return await fetchAsync(`https://api.evrloot.xyz/api/nfts/getMetadata/${id}`);
 }
 

@@ -2,25 +2,24 @@ import {getBases, getBase64ImageLayer, geNftInfo, getNftMetadata} from "../../ev
 import {createSoulEmbed} from "../embeds/soul-embed.js";
 import mergeImages from "merge-images";
 import {Canvas, Image} from "canvas";
+import {createFishingBoardEmbed} from "../embeds/fishing-board-embed.js";
 
-export const soulInfoSelectMenu = {
+export const fishingBoardSelectMenu = {
     async execute(interaction) {
         interaction.deferReply();
-        const soulId = interaction.values[0];
-        console.log(soulId);
-
-        const metadata = await getNftMetadata(soulId);
+        const fishingBoardId = interaction.values[0];
+        console.log('fishingBoardId', fishingBoardId);
 
         const bases = await getBases();
-        const soulInfo = await geNftInfo(soulId);
+        const fishingBoardInfo = await geNftInfo(fishingBoardId);
 
-        const soulResources = soulInfo.resources[0];
-        const baseCollection = bases.find(base => base.id === soulResources.base)
-        const partsIpfsSrcs = soulResources.parts.map(soulPartString =>
-            baseCollection.parts.find(basePart => basePart.id === soulPartString)
+        const fishingBoardResources = fishingBoardInfo.resources[0];
+        const baseCollection = bases.find(base => base.id === fishingBoardResources.base)
+        const partsIpfsSrcs = fishingBoardResources.parts.map(fishingBoardPartString =>
+            baseCollection.parts.find(basePart => basePart.id === fishingBoardPartString)
         )
 
-        const childNftsIpfsSrcs = soulInfo.children.map(async childNft => await prepareChildIpfsLink(childNft, bases))
+        const childNftsIpfsSrcs = fishingBoardInfo.children.map(async childNft => await prepareChildIpfsLink(childNft, bases))
 
         await Promise.all(childNftsIpfsSrcs).then(childNftsIpfsSrcs => partsIpfsSrcs.push(...childNftsIpfsSrcs))
 
@@ -37,18 +36,20 @@ export const soulInfoSelectMenu = {
             .then(base64Images => {
                 mergeImages(base64Images, {
                     Canvas: Canvas,
-                    Image: Image
+                    Image: Image,
+                    width: 1920,
+                    height: 1080
                 })
-            .then(b64 => {
-                const base64content = Buffer.from(b64.substring(b64.indexOf(',')+1), 'base64')
-                interaction.editReply({
-                    embeds: createSoulEmbed(metadata, interaction.message.interaction.user),
-                    files: [
-                        { attachment: base64content }
-                    ]
-                })
+                    .then(b64 => {
+                        const base64content = Buffer.from(b64.substring(b64.indexOf(',')+1), 'base64')
+                        interaction.editReply({
+                            embeds: createFishingBoardEmbed(interaction.message.interaction.user),
+                            files: [
+                                { attachment: base64content }
+                            ]
+                        })
+                    });
             });
-        });
     },
 }
 

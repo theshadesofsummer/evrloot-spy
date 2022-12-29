@@ -1,5 +1,5 @@
 import {ActionRowBuilder, SelectMenuBuilder, SlashCommandBuilder} from "discord.js";
-import {createChooseSoulsEmbed} from "./embeds/choose-soul-embeds.js";
+import {createChooseSoulEmbeds} from "./embeds/choose-soul-embeds.js";
 import {ExtraRowPosition, Pagination} from "pagination.djs";
 import {findClassEmoteObject} from "./helpers/emotes.js";
 import {getSouls} from "../evrloot-api.js"
@@ -23,7 +23,7 @@ export const soulInfoCommand = {
         const address = interaction.options.getString('address')
         const soulInfoWithMetadata = await getSouls(address);
 
-        const embeds = createChooseSoulsEmbed(soulInfoWithMetadata);
+        const embeds = createChooseSoulEmbeds(soulInfoWithMetadata);
 
         const pagination = new Pagination(interaction)
             .setEmbeds(embeds)
