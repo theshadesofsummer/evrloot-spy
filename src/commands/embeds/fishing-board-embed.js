@@ -4,13 +4,6 @@ export function createFishingBoardEmbed(user) {
         author: {
             name: `fishing board requested by ${user.username}`,
         },
-        fields: [
-            {
-                name: 'Test',
-                value: 'Value',
-                inline: true
-            },
-        ],
         timestamp: new Date().toISOString(),
     }];
 }

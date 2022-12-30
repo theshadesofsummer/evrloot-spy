@@ -1,14 +1,15 @@
-import {getBases, getBase64ImageLayer, geNftInfo, getNftMetadata} from "../../evrloot-api.js";
-import {createSoulEmbed} from "../embeds/soul-embed.js";
+import {geNftInfo, getBase64ImageLayer, getBases} from "../../evrloot-api.js";
 import mergeImages from "merge-images";
 import {Canvas, Image} from "canvas";
 import {createFishingBoardEmbed} from "../embeds/fishing-board-embed.js";
+import sharp from 'sharp';
 
 export const fishingBoardSelectMenu = {
     async execute(interaction) {
         interaction.deferReply();
         const fishingBoardId = interaction.values[0];
-        console.log('fishingBoardId', fishingBoardId);
+
+        console.log('requested', fishingBoardId, 'by', interaction.message.interaction.user.username);
 
         const bases = await getBases();
         const fishingBoardInfo = await geNftInfo(fishingBoardId);
@@ -17,7 +18,7 @@ export const fishingBoardSelectMenu = {
         const baseCollection = bases.find(base => base.id === fishingBoardResources.base)
         const partsIpfsSrcs = fishingBoardResources.parts.map(fishingBoardPartString =>
             baseCollection.parts.find(basePart => basePart.id === fishingBoardPartString)
-        )
+        ).filter(partsIpfsSrc => !fishingBoardInfo.children.some(childNft => childNft.equipped.endsWith(partsIpfsSrc.id)))
 
         const childNftsIpfsSrcs = fishingBoardInfo.children.map(async childNft => await prepareChildIpfsLink(childNft, bases))
 
@@ -29,7 +30,6 @@ export const fishingBoardSelectMenu = {
             .map(part => part.src);
 
         const base64Images = filteredPartsIpfsSrcs
-            .filter(ipfsLink => ipfsLink.endsWith('.png'))
             .map(async ipfsLink => await getBase64ImageLayer(ipfsLink.substring('ipfs://ipfs/'.length)))
 
         Promise.all(base64Images)
@@ -37,17 +37,18 @@ export const fishingBoardSelectMenu = {
                 mergeImages(base64Images, {
                     Canvas: Canvas,
                     Image: Image,
-                    width: 1920,
-                    height: 1080
                 })
                     .then(b64 => {
-                        const base64content = Buffer.from(b64.substring(b64.indexOf(',')+1), 'base64')
-                        interaction.editReply({
-                            embeds: createFishingBoardEmbed(interaction.message.interaction.user),
-                            files: [
-                                { attachment: base64content }
-                            ]
-                        })
+                        const base64content = Buffer.from(b64.substring(b64.indexOf(',') + 1), 'base64')
+                        sharp(base64content).resize(1920, 1080).png().toBuffer().then(scaledBase64Content =>
+                            interaction.editReply({
+                                embeds: createFishingBoardEmbed(interaction.message.interaction.user),
+                                files: [
+                                    {attachment: scaledBase64Content}
+                                ]
+                            })
+                        )
+
                     });
             });
     },

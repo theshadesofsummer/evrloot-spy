@@ -1,7 +1,6 @@
 import {ActionRowBuilder, SelectMenuBuilder, SlashCommandBuilder} from "discord.js";
 import {createChooseFishingBoardEmbeds} from "./embeds/choose-fishing-board-embeds.js";
 import {ExtraRowPosition, Pagination} from "pagination.djs";
-import {findClassEmoteObject} from "./helpers/emotes.js";
 import {getFishingBoards} from "../evrloot-api.js"
 
 export const fishingBoardCommand = {
@@ -22,6 +21,8 @@ export const fishingBoardCommand = {
         })
         const address = interaction.options.getString('address')
         const fishingBoardNfts = await getFishingBoards(address);
+
+        console.log('user', interaction.user.username, 'requested fishing boards of', address);
 
         const sortedFishingBoards = fishingBoardNfts
             .map(fishingBoard => {

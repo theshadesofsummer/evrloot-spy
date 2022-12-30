@@ -23,6 +23,8 @@ export const soulInfoCommand = {
         const address = interaction.options.getString('address')
         const soulInfoWithMetadata = await getSouls(address);
 
+        console.log('user', interaction.user.username, 'requested souls of', address);
+
         const embeds = createChooseSoulEmbeds(soulInfoWithMetadata);
 
         const pagination = new Pagination(interaction)
