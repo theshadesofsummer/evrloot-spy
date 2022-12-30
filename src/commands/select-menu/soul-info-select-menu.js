@@ -1,4 +1,4 @@
-import {getBases, getBase64ImageLayer, geNftInfo, getSoulMetadata} from "../../evrloot-api.js";
+import {getBases, getBase64ImageLayer, geNftInfo, getNftMetadata} from "../../evrloot-api.js";
 import {createSoulEmbed} from "../embeds/soul-embed.js";
 import mergeImages from "merge-images";
 import {Canvas, Image} from "canvas";
@@ -7,18 +7,23 @@ export const soulInfoSelectMenu = {
     async execute(interaction) {
         interaction.deferReply();
         const soulId = interaction.values[0];
-        console.log(soulId);
 
-        const metadata = await getSoulMetadata(soulId);
+        console.log('requested', soulId, 'by', interaction.message.interaction.user.username);
+
+        const metadata = await getNftMetadata(soulId);
 
         const bases = await getBases();
         const soulInfo = await geNftInfo(soulId);
 
         const soulResources = soulInfo.resources[0];
         const baseCollection = bases.find(base => base.id === soulResources.base)
-        const partsIpfsSrcs = soulResources.parts.map(soulPartString =>
+        let partsIpfsSrcs = soulResources.parts.map(soulPartString =>
             baseCollection.parts.find(basePart => basePart.id === soulPartString)
         )
+
+        console.log('before filter', partsIpfsSrcs)
+        partsIpfsSrcs = partsIpfsSrcs.filter(partsIpfsSrc => !soulInfo.children.some(childNft => childNft.equipped.endsWith(partsIpfsSrc.id)))
+        console.log('after filter', partsIpfsSrcs)
 
         const childNftsIpfsSrcs = soulInfo.children.map(async childNft => await prepareChildIpfsLink(childNft, bases))
 
@@ -30,7 +35,6 @@ export const soulInfoSelectMenu = {
             .map(part => part.src);
 
         const base64Images = filteredPartsIpfsSrcs
-            .filter(ipfsLink => ipfsLink.endsWith('.png'))
             .map(async ipfsLink => await getBase64ImageLayer(ipfsLink.substring('ipfs://ipfs/'.length)))
 
         Promise.all(base64Images)

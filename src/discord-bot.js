@@ -7,10 +7,13 @@ import { Client, Collection, IntentsBitField } from 'discord.js';
 
 import { soulInfoCommand } from './commands/soul-info.js'
 import { soulInfoSelectMenu} from "./commands/select-menu/soul-info-select-menu.js";
+import {fishingBoardCommand} from "./commands/fishing-board.js";
+import {fishingBoardSelectMenu} from "./commands/select-menu/fishing-board-select-menu.js";
 
 const client = new Client({ intents: [IntentsBitField.Flags.Guilds, IntentsBitField.Flags.GuildMessages] });
 const commands = [
     soulInfoCommand,
+    fishingBoardCommand
 ]
 
 export async function setupDiscordBot() {
@@ -38,11 +41,16 @@ export async function setupDiscordBot() {
 
         if (interaction.isSelectMenu()) {
             try {
-                await soulInfoSelectMenu.execute(interaction)
+                if (interaction.customId === 'choose-soul-menu')
+                    await soulInfoSelectMenu.execute(interaction)
+                else if (interaction.customId === 'choose-fishing-board-menu')
+                    await fishingBoardSelectMenu.execute(interaction)
+                else
+                    interaction.reply('no matching interaction found')
             }
            catch (error) {
                 console.log(error);
-                await interaction.reply({ content: 'There was an error while fetching the soul!', ephemeral: true });
+                await interaction.editReply({ content: 'There was an error while fetching the soul!' });
            }
         }
     });
