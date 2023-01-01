@@ -19,11 +19,7 @@ export const soulInfoSelectMenu = {
         const baseCollection = bases.find(base => base.id === soulResources.base)
         let partsIpfsSrcs = soulResources.parts.map(soulPartString =>
             baseCollection.parts.find(basePart => basePart.id === soulPartString)
-        )
-
-        console.log('before filter', partsIpfsSrcs)
-        partsIpfsSrcs = partsIpfsSrcs.filter(partsIpfsSrc => !soulInfo.children.some(childNft => childNft.equipped.endsWith(partsIpfsSrc.id)))
-        console.log('after filter', partsIpfsSrcs)
+        ).filter(partsIpfsSrc => !soulInfo.children.some(childNft => childNft.equipped.endsWith(partsIpfsSrc.id)))
 
         const childNftsIpfsSrcs = soulInfo.children.map(async childNft => await prepareChildIpfsLink(childNft, bases))
 
