@@ -25,7 +25,7 @@ function fishingBoardList(fishingBoards, page) {
         .slice(firstElementIndex, firstElementIndex + PAGE_SIZE)
 
     slicedFishingBoards.forEach((fishingBoard, idx) => {
-        description += `\`[${firstElementIndex + idx + 1}]\` ${fishingBoard.metadata.name} (${fishingBoard.fishAmount}/24)\n`
+        description += `\`[${firstElementIndex + idx + 1}]\` Fishing Board (${fishingBoard.fishAmount}/24)\n`
     });
 
     return description;
