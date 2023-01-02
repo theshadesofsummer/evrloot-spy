@@ -7,22 +7,22 @@ export function findClassEmoteObject(soulClass) {
 }
 
 const ClassesWithText = new Map([
-    ['Berserker', '<:berserker:1039914842183696444>'],
-    ['Alchemist', '<:alchemist:1039914840917037066>'],
-    ['Ranger', '<:ranger:1039914843861430272>']
+    ['Berserker', '<:berserker:1059415141856329829>'],
+    ['Alchemist', '<:alchemist:1059415104606715944>'],
+    ['Ranger', '<:ranger:1059415183484780614>']
 ]);
 
 const ClassesWithObject = new Map([
     ['Berserker', {
         name: "berserker",
-        id: "1039914842183696444"
+        id: "1059415141856329829"
     }],
     ['Alchemist', {
         name: "alchemist",
-        id: "1039914840917037066"
+        id: "1059415104606715944"
     }],
     ['Ranger', {
         name: "ranger",
-        id: "1039914843861430272"
+        id: "1059415183484780614"
     }]
 ]);
