@@ -1,8 +1,10 @@
-export function createSoulEmbed(metadata, user) {
+export function createSoulEmbed(soulId, metadata, user) {
     return [{
         color: 0xae1917,
+        title: metadata.name,
+        url: `https://singular.app/collectibles/kusama/54bbd380dc3baaa27b-EVRSOULS/${soulId}`,
         author: {
-            name: `${metadata.name} requested by ${user.username}`,
+            name: `requested by ${user.username}`,
             icon_url: `https://game.evrloot.com/Soulclaim/${metadata.properties['Soul Class'].value.toLowerCase()}.png`,
         },
         fields: [
@@ -27,36 +29,27 @@ export function createSoulEmbed(metadata, user) {
             //     inline: true
             // },
             {
-                name: 'Strength',
-                value: metadata.properties['Strength'].value,
-                inline: true
-            },
-            {
-                name: 'Dexterity',
-                value: metadata.properties['Dexterity'].value,
-                inline: true
-            },
-            {
-                name: 'Intelligence',
-                value: metadata.properties['Intelligence'].value,
-                inline: true
-            },
-            {
-                name: 'Wisdom',
-                value: metadata.properties['Wisdom'].value,
-                inline: true
-            },
-            {
-                name: 'Fortitude',
-                value: metadata.properties['Fortitude'].value,
-                inline: true
-            },
-            {
-                name: 'Luck',
-                value: metadata.properties['Luck'].value,
-                inline: true
+                name: 'Stats',
+                value: statsFormatter(metadata),
             },
         ],
         timestamp: new Date().toISOString(),
     }];
+}
+
+function statsFormatter(metadata) {
+    let returnString = '';
+
+    returnString += `*Strength*: ${getStatFormat(metadata.properties['Strength'].value, 8)}\n`;
+    returnString += `*Dexterity*: ${getStatFormat(metadata.properties['Dexterity'].value, 8)}\n`;
+    returnString += `*Intelligence*: ${getStatFormat(metadata.properties['Intelligence'].value, 8)}\n`;
+    returnString += `*Wisdom*: ${getStatFormat(metadata.properties['Wisdom'].value, 8)}\n`;
+    returnString += `*Fortitude*: ${getStatFormat(metadata.properties['Fortitude'].value, 8)}\n`;
+    returnString += `*Luck*: ${getStatFormat(metadata.properties['Fortitude'].value, 4)}`;
+
+    return returnString
+}
+
+function getStatFormat(stat, goodValue) {
+    return stat >= goodValue ? `**${stat}**` : stat.toString();
 }

@@ -42,7 +42,7 @@ export const soulInfoSelectMenu = {
             .then(b64 => {
                 const base64content = Buffer.from(b64.substring(b64.indexOf(',')+1), 'base64')
                 interaction.editReply({
-                    embeds: createSoulEmbed(metadata, interaction.message.interaction.user),
+                    embeds: createSoulEmbed(soulId, metadata, interaction.message.interaction.user),
                     files: [
                         { attachment: base64content }
                     ]
