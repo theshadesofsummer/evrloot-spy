@@ -42,7 +42,7 @@ export const fishingBoardSelectMenu = {
                         const base64content = Buffer.from(b64.substring(b64.indexOf(',') + 1), 'base64')
                         sharp(base64content).resize(1920, 1080).png().toBuffer().then(scaledBase64Content =>
                             interaction.editReply({
-                                embeds: createFishingBoardEmbed(interaction.message.interaction.user),
+                                embeds: createFishingBoardEmbed(fishingBoardId, interaction.message.interaction.user),
                                 files: [
                                     {attachment: scaledBase64Content}
                                 ]

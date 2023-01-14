@@ -1,8 +1,10 @@
-export function createFishingBoardEmbed(user) {
+export function createFishingBoardEmbed(fishingBoardId, user) {
     return [{
         color: 0xae1917,
+        title: 'Fishing Board',
+        url: `https://singular.app/collectibles/kusama/54bbd380dc3baaa27b-EVRLOOT/${fishingBoardId}`,
         author: {
-            name: `fishing board requested by ${user.username}`,
+            name: `requested by ${user.username}`,
         },
         timestamp: new Date().toISOString(),
     }];
