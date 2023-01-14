@@ -1,4 +1,4 @@
-export function createSoulEmbed(soulId, metadata, experienceLevels, user) {
+export function createSoulEmbed(soulId, metadata, childNftsMetadata, experienceLevels, user) {
     return [{
         color: 0xae1917,
         title: metadata.name,
@@ -30,7 +30,7 @@ export function createSoulEmbed(soulId, metadata, experienceLevels, user) {
             // },
             {
                 name: 'Stats',
-                value: statsFormatter(metadata),
+                value: statsFormatter(metadata, childNftsMetadata),
                 inline: true
             },
             {
@@ -43,21 +43,31 @@ export function createSoulEmbed(soulId, metadata, experienceLevels, user) {
     }];
 }
 
-function statsFormatter(metadata) {
+function statsFormatter(metadata, childNftsMetadata) {
     let returnString = '';
 
-    returnString += `*Strength*: ${getStatFormat(metadata.properties['Strength'].value, 8)}\n`;
-    returnString += `*Dexterity*: ${getStatFormat(metadata.properties['Dexterity'].value, 8)}\n`;
-    returnString += `*Intelligence*: ${getStatFormat(metadata.properties['Intelligence'].value, 8)}\n`;
-    returnString += `*Wisdom*: ${getStatFormat(metadata.properties['Wisdom'].value, 8)}\n`;
-    returnString += `*Fortitude*: ${getStatFormat(metadata.properties['Fortitude'].value, 8)}\n`;
-    returnString += `*Luck*: ${getStatFormat(metadata.properties['Fortitude'].value, 4)}`;
+    returnString += `*Strength*: ${getStatFormat(metadata.properties['Strength'].value, 8)} ${upgradedStat(childNftsMetadata, 'Strength')}\n`;
+    returnString += `*Dexterity*: ${getStatFormat(metadata.properties['Dexterity'].value, 8)} ${upgradedStat(childNftsMetadata, 'Dexterity')}\n`;
+    returnString += `*Intelligence*: ${getStatFormat(metadata.properties['Intelligence'].value, 8)} ${upgradedStat(childNftsMetadata, 'Intelligence')}\n`;
+    returnString += `*Wisdom*: ${getStatFormat(metadata.properties['Wisdom'].value, 8)} ${upgradedStat(childNftsMetadata, 'Wisdom')}\n`;
+    returnString += `*Fortitude*: ${getStatFormat(metadata.properties['Fortitude'].value, 8)} ${upgradedStat(childNftsMetadata, 'Fortitude')}\n`;
+    returnString += `*Luck*: ${getStatFormat(metadata.properties['Luck'].value, 4)} ${upgradedStat(childNftsMetadata, 'Luck')}`;
 
     return returnString
 }
 
 function getStatFormat(stat, goodValue) {
     return stat >= goodValue ? `**${stat}**` : stat.toString();
+}
+
+function upgradedStat(childNftsMetadata, statType) {
+    const effectingChildNftsMetadata = childNftsMetadata
+        .filter(metadata => metadata.properties[statType])
+
+    if (effectingChildNftsMetadata.length < 1) return ""
+
+    const upgradeAmount = effectingChildNftsMetadata.reduce((acc, metadata) => acc + Number(metadata.properties[statType].value), 0)
+    return `***+${upgradeAmount}***`;
 }
 
 function experienceFormatter(experienceLevels) {

@@ -16,6 +16,10 @@ export const soulInfoSelectMenu = {
         const bases = await getBases();
         const soulInfo = await geNftInfo(soulId);
 
+        const childNftsMetadata = soulInfo.children.map(async childNft => await getNftMetadata(childNft.id))
+        let resolvedChildNftsMetadata;
+        await Promise.all(childNftsMetadata).then(metadatas => resolvedChildNftsMetadata = metadatas);
+
         const soulResources = soulInfo.resources[0];
         const baseCollection = bases.find(base => base.id === soulResources.base)
         let partsIpfsSrcs = soulResources.parts.map(soulPartString =>
@@ -43,7 +47,7 @@ export const soulInfoSelectMenu = {
             .then(b64 => {
                 const base64content = Buffer.from(b64.substring(b64.indexOf(',')+1), 'base64')
                 interaction.editReply({
-                    embeds: createSoulEmbed(soulId, metadata, experienceLevels, interaction.message.interaction.user),
+                    embeds: createSoulEmbed(soulId, metadata, resolvedChildNftsMetadata, experienceLevels, interaction.message.interaction.user),
                     files: [
                         { attachment: base64content }
                     ]
