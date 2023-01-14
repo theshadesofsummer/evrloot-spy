@@ -34,6 +34,15 @@ export async function geNftInfo(id) {
     return await fetchAsync(`https://api.evrloot.xyz/api/nfts/${id}`);
 }
 
+export async function getSoulExperience(id) {
+    const fishingExp = await fetchAsync(`https://api.evrloot.xyz/api/modifiers/modifiers/23/${id}`)
+    const waterExp = await fetchAsync(`https://api.evrloot.xyz/api/modifiers/modifiers/24/${id}`)
+    const loggingExp = await fetchAsync(`https://api.evrloot.xyz/api/modifiers/modifiers/25/${id}`)
+    const woodCraftingExp = await fetchAsync(`https://api.evrloot.xyz/api/modifiers/modifiers/26/${id}`)
+    const cookingExp = await fetchAsync(`https://api.evrloot.xyz/api/modifiers/modifiers/27/${id}`)
+    return [fishingExp, waterExp, loggingExp, woodCraftingExp, cookingExp];
+}
+
 async function fetchAsync(url) {
     return fetch(url).then(response => {
         if (!response.ok) {

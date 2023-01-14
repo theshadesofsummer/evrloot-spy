@@ -1,4 +1,4 @@
-export function createSoulEmbed(soulId, metadata, user) {
+export function createSoulEmbed(soulId, metadata, experienceLevels, user) {
     return [{
         color: 0xae1917,
         title: metadata.name,
@@ -31,6 +31,12 @@ export function createSoulEmbed(soulId, metadata, user) {
             {
                 name: 'Stats',
                 value: statsFormatter(metadata),
+                inline: true
+            },
+            {
+                name: 'Experience',
+                value: experienceFormatter(experienceLevels),
+                inline: true
             },
         ],
         timestamp: new Date().toISOString(),
@@ -52,4 +58,19 @@ function statsFormatter(metadata) {
 
 function getStatFormat(stat, goodValue) {
     return stat >= goodValue ? `**${stat}**` : stat.toString();
+}
+
+function experienceFormatter(experienceLevels) {
+    let returnString = '';
+
+    for (const experienceLevel of experienceLevels) {
+        returnString += `*${experienceLevel.skill}*: ${getRankName(experienceLevel.rank)} (${Math.round(experienceLevel.currentExp)}/${experienceLevel.nextLvl})\n`
+    }
+
+    return returnString;
+}
+
+function getRankName(rank) {
+    const rankWords = rank.split(' ');
+    return rankWords[rankWords.length-1];
 }

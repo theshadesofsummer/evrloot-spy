@@ -1,4 +1,4 @@
-import {getBases, getBase64ImageLayer, geNftInfo, getNftMetadata} from "../../evrloot-api.js";
+import {getBases, getBase64ImageLayer, geNftInfo, getNftMetadata, getSoulExperience} from "../../evrloot-api.js";
 import {createSoulEmbed} from "../embeds/soul-embed.js";
 import mergeImages from "merge-images";
 import {Canvas, Image} from "canvas";
@@ -11,6 +11,7 @@ export const soulInfoSelectMenu = {
         console.log('requested', soulId, 'by', interaction.message.interaction.user.username);
 
         const metadata = await getNftMetadata(soulId);
+        const experienceLevels = await getSoulExperience(soulId);
 
         const bases = await getBases();
         const soulInfo = await geNftInfo(soulId);
@@ -42,7 +43,7 @@ export const soulInfoSelectMenu = {
             .then(b64 => {
                 const base64content = Buffer.from(b64.substring(b64.indexOf(',')+1), 'base64')
                 interaction.editReply({
-                    embeds: createSoulEmbed(soulId, metadata, interaction.message.interaction.user),
+                    embeds: createSoulEmbed(soulId, metadata, experienceLevels, interaction.message.interaction.user),
                     files: [
                         { attachment: base64content }
                     ]
