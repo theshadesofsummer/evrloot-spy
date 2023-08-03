@@ -39,7 +39,9 @@ export async function setupDiscordBot() {
             }
         }
 
-        if (interaction.isSelectMenu()) {
+        console.log('before select menu')
+        if (interaction.isStringSelectMenu()) {
+            console.log('after select menu')
             try {
                 if (interaction.customId === 'choose-soul-menu')
                     await soulInfoSelectMenu.execute(interaction)

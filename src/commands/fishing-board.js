@@ -1,4 +1,4 @@
-import {ActionRowBuilder, SelectMenuBuilder, SlashCommandBuilder} from "discord.js";
+import {ActionRowBuilder, StringSelectMenuBuilder, SlashCommandBuilder} from "discord.js";
 import {createChooseFishingBoardEmbeds} from "./embeds/choose-fishing-board-embeds.js";
 import {ExtraRowPosition, Pagination} from "pagination.djs";
 import {getFishingBoards} from "../evrloot-api.js"
@@ -9,10 +9,10 @@ export const fishingBoardCommand = {
         .setDescription('Show of your fishing board to others!')
         .addStringOption(option =>
             option.setName('address')
-                .setDescription('Put in the KSM address of your wallet')
+                .setDescription('Put in the moonbeam address of your wallet (0x...)')
                 .setRequired(true)
-                .setMaxLength(47)
-                .setMinLength(47)
+                .setMaxLength(42)
+                .setMinLength(42)
         ),
 
     async execute(interaction) {
@@ -46,7 +46,7 @@ export const fishingBoardCommand = {
 };
 
 function getAmountOfFishes(fishingBoardNft) {
-    return fishingBoardNft.children.filter(child => child.equipped.startsWith("base-14389323-Fishing_Board.fish_")).length
+    return fishingBoardNft.children.filter(child => child.partDescription.startsWith("fish_")).length
 }
 
 function createFishingBoardSelectMenuRow(fishingBoards) {
@@ -54,7 +54,7 @@ function createFishingBoardSelectMenuRow(fishingBoards) {
         label: `[${index+1}] Fishing Board (${fishingBoard.fishAmount}/24)`,
         value: fishingBoard.id,
     }));
-    const chooseSoulSelectMenu = new SelectMenuBuilder()
+    const chooseSoulSelectMenu = new StringSelectMenuBuilder()
         .setCustomId("choose-fishing-board-menu")
         .addOptions(chooseFishingBoardButtons)
     return new ActionRowBuilder().setComponents(chooseSoulSelectMenu)

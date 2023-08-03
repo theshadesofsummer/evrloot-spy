@@ -2,32 +2,33 @@ import {findClassEmote} from "../helpers/emotes.js";
 
 const PAGE_SIZE = 5;
 
-export function createChooseSoulEmbeds(soulInfos) {
+export function createChooseSoulEmbeds(souls) {
     const embeds = [];
-    for (let page = 0; page < soulInfos.length / PAGE_SIZE; page++) {
-        embeds.push(createChooseSoulEmbed(soulInfos, page))
+    for (let page = 0; page < souls.length / PAGE_SIZE; page++) {
+        embeds.push(createChooseSoulEmbed(souls, page))
     }
     return embeds;
 }
 
-function createChooseSoulEmbed(soulInfos, page) {
+function createChooseSoulEmbed(souls, page) {
     return {
         color: 0xae1917,
         title: `Choose your soul!`,
-        description: soulList(soulInfos, page),
+        description: soulList(souls, page),
         timestamp: new Date().toISOString(),
     };
 }
 
-function soulList(soulInfos, page) {
+function soulList(souls, page) {
     let description = '';
     const firstElementIndex = page * PAGE_SIZE;
 
-    const slicedSouls = soulInfos
+    const slicedSouls = souls
         .slice(firstElementIndex, firstElementIndex + PAGE_SIZE)
 
     slicedSouls.forEach((soul, idx) => {
-        description += `\`[${firstElementIndex + idx + 1}]\` ${findClassEmote(soul.metadata.properties['Soul Class'].value)} ${soul.metadata.name}\n`
+        const soulClass = soul.retrievedMetadata.properties['Soul Class'].value
+        description += `\`[${firstElementIndex + idx + 1}]\` ${findClassEmote(soulClass)} ${soul.retrievedMetadata.name}\n`
     });
 
     return description;

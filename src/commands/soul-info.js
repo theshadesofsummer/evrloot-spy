@@ -1,4 +1,4 @@
-import {ActionRowBuilder, SelectMenuBuilder, SlashCommandBuilder} from "discord.js";
+import {ActionRowBuilder, StringSelectMenuBuilder, SlashCommandBuilder} from "discord.js";
 import {createChooseSoulEmbeds} from "./embeds/choose-soul-embeds.js";
 import {ExtraRowPosition, Pagination} from "pagination.djs";
 import {findClassEmoteObject} from "./helpers/emotes.js";
@@ -7,13 +7,13 @@ import {getSouls} from "../evrloot-api.js"
 export const soulInfoCommand = {
     data: new SlashCommandBuilder()
         .setName('soul-info')
-        .setDescription('Show of your legendary soul to others!')
+        .setDescription('Show of your legendary soul(s) to others!')
         .addStringOption(option =>
             option.setName('address')
-                .setDescription('Put in the KSM address of your wallet')
+                .setDescription('Put in the moonbeam address of your wallet (0x...)')
                 .setRequired(true)
-                .setMaxLength(47)
-                .setMinLength(47)
+                .setMaxLength(42)
+                .setMinLength(42)
         ),
 
     async execute(interaction) {
@@ -21,28 +21,28 @@ export const soulInfoCommand = {
             ephemeral: true
         })
         const address = interaction.options.getString('address')
-        const soulInfoWithMetadata = await getSouls(address);
+        const souls = await getSouls(address);
 
         console.log('user', interaction.user.username, 'requested souls of', address);
 
-        const embeds = createChooseSoulEmbeds(soulInfoWithMetadata);
+        const embeds = createChooseSoulEmbeds(souls);
 
         const pagination = new Pagination(interaction)
             .setEmbeds(embeds)
             .setEphemeral(true)
-            .addActionRows([createSelectMenuRow(soulInfoWithMetadata)], ExtraRowPosition.Below);
+            .addActionRows([createSelectMenuRow(souls)], ExtraRowPosition.Below);
 
         await pagination.render();
     },
 };
 
-function createSelectMenuRow(soulInfoWithMetadata) {
-    const chooseSoulButtons = soulInfoWithMetadata.map((soulInfo, index) => ({
-        label: `[${index+1}] ${soulInfo.metadata.name}`,
-        value: soulInfo.id,
-        emoji: findClassEmoteObject(soulInfo.metadata.properties['Soul Class'].value)
+function createSelectMenuRow(souls) {
+    const chooseSoulButtons = souls.map((soul, index) => ({
+        label: `[${index+1}] ${soul.retrievedMetadata.name}`,
+        value: soul.id,
+        emoji: findClassEmoteObject(soul.retrievedMetadata.properties['Soul Class'].value)
     }));
-    const chooseSoulSelectMenu = new SelectMenuBuilder()
+    const chooseSoulSelectMenu = new StringSelectMenuBuilder()
         .setCustomId("choose-soul-menu")
         .addOptions(chooseSoulButtons)
     return new ActionRowBuilder().setComponents(chooseSoulSelectMenu)
