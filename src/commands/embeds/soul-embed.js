@@ -1,4 +1,7 @@
 export function createSoulEmbed(soul, user) {
+    const { soulSpecificStatName, soulSpecificStatValue } = soulClassSpecificName(soul);
+    console.log('soulSpecificStatName', soulSpecificStatName)
+    console.log('soulSpecificStatValue', soulSpecificStatValue)
 
     return [{
         color: 0xae1917,
@@ -32,24 +35,44 @@ export function createSoulEmbed(soul, user) {
                 value: getProperty(soul, 'Condition'),
                 inline: true
             },
-            // {
-            //     name: 'Role',
-            //     value: metadata['Role'].value,
-            //     inline: true
-            // },
+            {
+                name: soulSpecificStatName,
+                value: soulSpecificStatValue,
+                inline: true,
+            },
+            {
+                name: '',
+                value: '',
+                inline: true,
+            },
             {
                 name: 'Stats',
                 value: statsFormatter(soul),
                 inline: true
             },
-            // {
-            //     name: 'Experience',
-            //     value: experienceFormatter(soul.experience),
-            //     inline: true
-            // },
+            {
+                name: 'Experience',
+                value: experienceFormatter(soul.experience),
+                inline: true
+            },
         ],
         timestamp: new Date().toISOString(),
     }];
+}
+
+const specificClassNames = new Map([
+    ["Alchemist", "Specialty"],
+    ["Berserker", "Role"],
+    ["Ranger", "Spirit Animal"]
+])
+function soulClassSpecificName(soul) {
+    const statName = specificClassNames.get(soul.retrievedMetadata.properties["Soul Class"].value);
+    const statValue = soul.retrievedMetadata.properties[statName].value;
+
+    return {
+        soulSpecificStatName: statName,
+        soulSpecificStatValue: statValue,
+    }
 }
 
 function statsFormatter(soul) {
@@ -79,19 +102,47 @@ function upgradedStat(soulChildren, statType) {
     return `***+${upgradeAmount}***`;
 }
 
-// currently paused due to missing properties
-// function experienceFormatter(soulExperience) {
-//     const validActivities = soulExperience.activities.filter(activity => activity.activityId !== 0) // activity with id 0 is called unknown kek
-//
-//     let returnString = '';
-//     for (const activity of validActivities) {
-//         returnString += `*${activity.activityName}*: ${getRankName(experienceLevel.rank)} (${Math.round(experienceLevel.currentExp)}/${experienceLevel.nextLvl})\n`
-//     }
-//
-//     return returnString;
-// }
-//
-// function getRankName(rank) {
-//     const rankWords = rank.split(' ');
-//     return rankWords[rankWords.length-1];
-// }
+function experienceFormatter(soulExperience) {
+    const validActivities = soulExperience.activities.filter(activity => activity.activityId !== 0) // activity with id 0 is called unknown kek
+
+    let returnString = '';
+    for (const activity of validActivities) {
+        returnString += `*${activity.activityName}*: ${getRankName(activity.experience)} (${activity.experience}/${getNextLevel(activity.experience)})\n`
+    }
+
+    return returnString;
+}
+
+function getRankName(currentExp) {
+    const lvlNames = [
+        'Unskilled',
+        'Amateur',
+        'Beginner',
+        'Novice',
+        'Rookie',
+        'Adept',
+        'Apprentice',
+        'Journeyman',
+        'Expert',
+        'Master',
+        'Artisan',
+        'Grandmaster',
+        'Legendary',
+    ];
+
+    let nextLevelBarrier = 100;
+    let lvlNameCounter = 0;
+    while (nextLevelBarrier < currentExp) {
+        nextLevelBarrier = nextLevelBarrier << 1
+        lvlNameCounter++;
+    }
+    return lvlNames[lvlNameCounter];
+}
+
+function getNextLevel(currentExp) {
+    let nextLevelBarrier = 100;
+    while (nextLevelBarrier < currentExp) {
+        nextLevelBarrier = nextLevelBarrier << 1
+    }
+    return nextLevelBarrier
+}
