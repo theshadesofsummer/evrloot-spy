@@ -1,5 +1,4 @@
 import dotenv from 'dotenv';
-dotenv.config();
 
 import { REST } from 'discord.js';
 import { Routes } from 'discord-api-types/v9';
@@ -17,6 +16,7 @@ const commands = [
 ]
 
 export async function setupDiscordBot() {
+    dotenv.config();
     await deployCommandsToServer();
 
     client.commands = getCollectionForCommands();
