@@ -16,7 +16,8 @@ const commands = [
 ]
 
 export async function setupDiscordBot() {
-    dotenv.config();
+    dotenv.config({path: '../.env'});
+
     await deployCommandsToServer();
 
     client.commands = getCollectionForCommands();
