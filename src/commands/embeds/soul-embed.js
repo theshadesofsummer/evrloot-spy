@@ -4,7 +4,6 @@ export function createSoulEmbed(soul, user) {
     return [{
         color: 0xae1917,
         title: soul.retrievedMetadata.name,
-        url: `https://singular.app/collectibles/moonbeam/0x9d1454e198f4b601bfc0069003045b0cbc0e6749/${soul.tokenId}`,
         author: {
             name: `requested by ${user.username}`,
             icon_url: `https://game.evrloot.com/Soulclaim/${getProperty(soul, 'Soul Class').toLowerCase()}.png`,
