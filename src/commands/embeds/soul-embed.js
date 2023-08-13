@@ -1,7 +1,5 @@
 export function createSoulEmbed(soul, user) {
     const { soulSpecificStatName, soulSpecificStatValue } = soulClassSpecificName(soul);
-    console.log('soulSpecificStatName', soulSpecificStatName)
-    console.log('soulSpecificStatValue', soulSpecificStatValue)
 
     return [{
         color: 0xae1917,

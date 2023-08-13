@@ -13,7 +13,7 @@ import {fishingBoardSelectMenu} from "./commands/select-menu/fishing-board-selec
 const client = new Client({ intents: [IntentsBitField.Flags.Guilds, IntentsBitField.Flags.GuildMessages] });
 const commands = [
     soulInfoCommand,
-    fishingBoardCommand
+    //fishingBoardCommand
 ]
 
 export async function setupDiscordBot() {
@@ -39,9 +39,7 @@ export async function setupDiscordBot() {
             }
         }
 
-        console.log('before select menu')
         if (interaction.isStringSelectMenu()) {
-            console.log('after select menu')
             try {
                 if (interaction.customId === 'choose-soul-menu')
                     await soulInfoSelectMenu.execute(interaction)
